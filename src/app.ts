@@ -1,6 +1,8 @@
 import { join } from 'path';
-import AutoLoad, {AutoloadPluginOptions} from '@fastify/autoload';
+import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload';
 import { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
+import cors from '@fastify/cors';
+
 require('./utils/mongoose')
 export interface AppOptions extends FastifyServerOptions, Partial<AutoloadPluginOptions> {
 
@@ -10,8 +12,8 @@ const options: AppOptions = {
 }
 
 const app: FastifyPluginAsync<AppOptions> = async (
-    fastify,
-    opts
+  fastify,
+  opts
 ): Promise<void> => {
   // Place here your custom code!
 
@@ -23,6 +25,11 @@ const app: FastifyPluginAsync<AppOptions> = async (
   void fastify.register(AutoLoad, {
     dir: join(__dirname, 'plugins'),
     options: opts
+  })
+
+  await fastify.register(cors, {
+    // put your options here
+    origin: true
   })
 
   // This loads all plugins defined in routes
